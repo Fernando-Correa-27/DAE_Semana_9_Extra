@@ -1,7 +1,13 @@
-// TODO(team) · Task 3
+// Task 3 · MovieCard component
 // Props: movie = { id, title, image, synopsis, rating, showtimes }.
 // Returns an <article> with an <img src alt> (the alt is the title), an <h3> with
-// the title and the rating as text, e.g. "★ 4.5".
+// the title only, and a separate element with the rating.
 export default function MovieCard({ movie }) {
-  throw new Error("TODO(team): write MovieCard in src/duel/team/MovieCard.jsx");
+  return (
+    <article>
+      <img src={movie.image} alt={movie.title} />
+      <h3>{movie.title}</h3>
+      <span>★ {movie.rating}</span>
+    </article>
+  );
 }

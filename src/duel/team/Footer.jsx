@@ -1,7 +1,17 @@
-// TODO(team) · Task 2
+// Task 2 · Footer component
 // Props: contact = { address, phone, email }.
 // Returns a <footer> with the address, a link whose href starts with tel:
 // and a link whose href starts with mailto:.
 export default function Footer({ contact }) {
-  throw new Error("TODO(team): write Footer in src/duel/team/Footer.jsx");
+  return (
+    <footer>
+      <p>{contact.address}</p>
+      <p>
+        <a href={`tel:${contact.phone}`}>{contact.phone}</a>
+      </p>
+      <p>
+        <a href={`mailto:${contact.email}`}>{contact.email}</a>
+      </p>
+    </footer>
+  );
 }

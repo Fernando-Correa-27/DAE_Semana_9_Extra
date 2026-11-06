@@ -49,14 +49,34 @@ archivo dice qué props recibe y qué debe devolver. Después de cada uno, `npm 
 | 7 | `Hero` | `movie` |
 | 8 | `AgentMessage` | `author`, `text` |
 
-## Parte 3 — El duelo con la IA
+## Duelo con la IA — Resumen y clasificación de fallos
 
-```powershell
-npm run duel:ai    # las respuestas de una IA (src/duel/ai/): algunas pruebas fallan
-```
+### Resumen de `npm run duel:ai`
 
-Lee cada fallo: el nombre de la prueba dice qué se esperaba y el mensaje, qué ocurrió. Clasifica los seis fallos
-(el de la tarea 1 y el de la 8 no son fallos: la IA los hizo bien).
+| Resultado | Cantidad |
+|---|---|
+| Pruebas que pasan | 29 |
+| Pruebas que fallan | 14 |
+| Archivos de prueba con fallos | 6 de 8 |
+| Archivos de prueba sin fallos | 2 (T1-header, T8-agentmessage) |
+
+### Clasificación de los seis fallos
+
+| Tarea | Qué hizo la IA | Nombre de la prueba (mensaje) | Tipo de fallo |
+|---|---|---|---|
+| **T2 Footer** | Usó `class="footer"` en lugar de `className="footer"` | `"no produce avisos de React en la consola (usa className, no class)"` — `expected [Array(1)] to deeply equal []` | **Aviso** (console warning) — React imprime `Invalid DOM property 'class'. Did you mean 'className'?` |
+| **T3 MovieCard** | No asignó `alt` a la imagen (`<img src={movie.image} />` sin alt) | `"la imagen tiene como texto alternativo el título de la película"` — `Unable to find an element with the alt text: La Última Función` | **Silencioso** (test assertion) — la imagen existe pero sin alt; el test no la encuentra |
+| **T4 Showtimes** | No maneja lista vacía (`times.length && <ul>...` oculta el fallback; renderiza `0` en vez de mensaje) | `"con lista vacía muestra el mensaje «Sin funciones hoy»"` — `Unable to find an element with the text: Sin funciones hoy` | **Silencioso** (test assertion) — no imprime "Sin funciones hoy", imprime `0` |
+| **T5 MovieList** | Usó `key={index}` en vez de `key={movie.id}` (React no puede reconciliar correctamente) | `"al invertir el orden, cada película conserva su propio nodo del DOM"` — `expected <li><article…</li> to be <li><article…</li>` | **Aviso** (console warning) — React imprime warning de key inestable |
+| **T6 Synopsis** | Usó `dangerouslySetInnerHTML` con HTML hostil (`onerror="window.__xss=1"`) | `"la sinopsis hostil se muestra como texto literal, con sus etiquetas a la vista"` — `expected 'Gran estreno  no te lo pierdas' to be 'Gran estreno <img…'` | **Ruidoso** (runtime error) — `dangerouslySetInnerHTML` inyecta el HTML; se ejecuta el XSS |
+| **T7 Hero** | Recibe prop `film` pero el test pasa `movie` → `film` es `undefined` | `"con una película correcta se dibuja sin lanzar ningún error"` — `Cannot read properties of undefined (reading 'title')` | **Ruidoso** (noisy error) — React lanza TypeError en render |
+
+### Explicación: ¿Por qué las tareas 1 y 8 no fallan?
+
+| Tarea | Componente | ¿Por qué pasa todas las pruebas? |
+|---|---|---|
+| **T1 Header** | `Header` | La IA generó código correcto: usa `<header>`, `<h1>{name}</h1>`, `<nav aria-label="Principal">` con `<ul>` y `<li>` para cada enlace. Todas las 5 pruebas pasan. |
+| **T8 AgentMessage** | `AgentMessage` | La IA generó código correcto y XSS-safe: `<strong>{author}:</strong> <span>{text}</span>`. Renderiza como texto plano (no usa `dangerouslySetInnerHTML`). Todas las 5 pruebas pasan. |
 
 ## Parte 4 — Arreglar la copia de la IA
 

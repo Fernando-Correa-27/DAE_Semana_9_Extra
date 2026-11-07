@@ -4,3 +4,17 @@
 export default function Synopsis({ text }) {
   return <p>{text}</p>;
 }
+
+// import DOMPurify from 'dompurify';
+
+// export default function Synopsis({ text }) {
+//   const htmlConSaltos = text.replace(/\n/g, "<br />");
+//   const htmlSeguro = DOMPurify.sanitize(htmlConSaltos);
+
+//   return (
+//     <p 
+//       className="synopsis" 
+//       dangerouslySetInnerHTML={{ __html: htmlSeguro }} 
+//     />
+//   );
+// }
